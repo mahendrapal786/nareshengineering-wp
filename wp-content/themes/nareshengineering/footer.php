@@ -22,29 +22,54 @@
               <div class="footer-list-29 footer-2">
                   <ul>
                       <h6 class="footer-title-29">Useful Links</h6>
-                      <li><a href="contact.html">Privacy Policy</a></li>
-                      <li><a href="contact.html">Help Desk</a></li>
-                      <li><a href="services.html">Projects</a></li>
-                      <li><a href="contact.html">All Users</a></li>
-                      <li><a href="contact.html">Support</a></li>
+                      <li><a href="<?php echo site_url('privacy-policy') ?>">Privacy Policy</a></li>
+                      <li><a href="<?php echo site_url('term-of-use') ?>">Term Of Use</a></li>
                   </ul>
               </div>
+              <?php 
+              $recent_product_args= array(
+                    'post_type' => 'product',
+                    'order' => 'DESC',
+                    'orderby' => 'post_date',
+                    'post_status' => 'publish',
+                    'posts_per_page' => 3,
+                 'tax_query' => array(
+                      array(
+                          'taxonomy' => 'product_cat',
+                          'field' => 'term_id',
+                          'terms'    => 17
+                      ),
+                    ),
+                  );
+              $product_query = new WP_Query( $recent_product_args );    
+            $total_pages=$product_query->max_num_pages;
+           $total_posts=$product_query->found_posts;
+           if ( $product_query->have_posts() ) :
+                  ?>
               <div class="footer-list-29 footer-3">
                   <div class="properties">
                       <h6 class="footer-title-29">Recent Projects</h6>
-                      <a href="#"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/g2.jpg" class="img-responsive" alt=""><p>We Are Leading International Consultiing Agency</p></a>
-                      <a href="#"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/g8.jpg" class="img-responsive" alt=""><p>Digital Marketing Agency all the foundational tools</p></a>
-                      <a href="#"><img src="<?php echo get_template_directory_uri(); ?>/assets/images/g6.jpg" class="img-responsive" alt=""><p>Doloremque velit sapien labore eius itna</p></a>
+                      <?php foreach($product_query->posts as $products) { 
+                  $productid=$products->ID;
+                  $productName=get_the_title($productid);
+                  $productURL=get_the_permalink( $productid ); 
+                  $src = wp_get_attachment_image_src( get_post_thumbnail_id($productid), 'full', false, '' );   
+                  echo '<a href="'.$productURL.'">';
+                  echo '<img src="'.$src[0].'" class="img-responsive" alt="'.$productName.'">';
+                  echo '<p>'.$productName.'</p>';
+                  echo '</a>';
+                    } ?>
                   </div>
               </div>
+               <?php endif; ?> 
               <div class="footer-list-29 footer-4">
                   <ul>
                       <h6 class="footer-title-29">Quick Links</h6>
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="about.html">About</a></li>
-                      <li><a href="services.html">Services</a></li>
-                      <li><a href="#"> Blog</a></li>
-                      <li><a href="contact.html">Contact</a></li>
+                      <li><a href="<?php echo site_url('about-us') ?>">About</a></li>
+                      <li><a href="<?php echo site_url('services') ?>">Services</a></li>
+                      <li><a href="<?php echo site_url('gallery') ?>">Gallery</a></li>
+                      <li><a href="<?php echo site_url('blog') ?>">Blog</a></li>
+                      <li><a href="<?php echo site_url('contact-us') ?>">Contact</a></li>
                   </ul>
               </div>
           </div>
